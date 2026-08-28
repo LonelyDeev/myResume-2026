@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasTranslations;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Portfolio extends Model
@@ -22,15 +23,17 @@ class Portfolio extends Model
         'description_en',
         'tech_tags',     // با کاما جدا می‌شود: Laravel, MySQL, Redis
         'image_path',
+        'gallery_paths', // آرایه JSON از مسیر تصاویر گالری
         'is_featured',
         'sort_order',
         'is_active',
     ];
 
     protected $casts = [
-        'is_featured' => 'boolean',
-        'is_active'   => 'boolean',
-        'sort_order'  => 'integer',
+        'is_featured'   => 'boolean',
+        'is_active'     => 'boolean',
+        'sort_order'    => 'integer',
+        'gallery_paths' => 'array',
     ];
 
     /**
@@ -41,6 +44,39 @@ class Portfolio extends Model
         return collect(explode(',', (string) $this->tech_tags))
             ->map(fn ($tag) => trim($tag))
             ->filter()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * تصویر کاور کارت: تصویر اصلی، یا در نبود آن اولین تصویر گالری
+     */
+    public function coverUrl(): ?string
+    {
+        if ($this->image_path) {
+            return Storage::url($this->image_path);
+        }
+
+        $gallery = (array) ($this->gallery_paths ?? []);
+
+        return @$gallery[0] ? Storage::url(@$gallery[0]) : null;
+    }
+
+    /**
+     * تصاویر گالری مودال: تصویر اصلی به‌عنوان اسلاید اول + تصاویر گالری (بدون تکرار)
+     */
+    public function galleryUrls(): array
+    {
+        $paths = array_filter([(string) $this->image_path]);
+
+        foreach ((array) ($this->gallery_paths ?? []) as $path) {
+            $paths[] = (string) $path;
+        }
+
+        return collect($paths)
+            ->filter()
+            ->unique()
+            ->map(fn (string $path) => Storage::url($path))
             ->values()
             ->all();
     }

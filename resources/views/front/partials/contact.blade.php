@@ -50,7 +50,7 @@
                         </span>
                         <div class="min-w-0">
                             <p class="text-xs font-bold text-slate-500">Telegram</p>
-                            <p dir="ltr" class="text-start text-sm font-bold text-white">{{ '@'.$info->telegram }}</p>
+                            <p dir="ltr" class="text-start text-sm font-bold text-white">@{{ $info->telegram }}</p>
                         </div>
                     </a>
                 @endif

@@ -100,6 +100,27 @@
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* مودال نمونه‌کار: انیمیشن ورود */
+        @keyframes pm-pop {
+            from { opacity: 0; transform: scale(.95) translateY(16px); }
+            to   { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        #portfolio-modal .pm-shell { animation: pm-pop .38s cubic-bezier(.16, 1, .3, 1) both; }
+
+        /* لایت‌باکس تمام‌صفحه */
+        @keyframes pm-fade { from { opacity: 0; } to { opacity: 1; } }
+        #portfolio-lightbox { animation: pm-fade .25s ease both; }
+        #portfolio-lightbox img { animation: pm-pop .3s cubic-bezier(.16, 1, .3, 1) both; }
+
+        /* اسکرول‌بار باریک بندانگشتی‌ها و جزئیات مودال */
+        .pm-thumbs::-webkit-scrollbar { height: 6px; }
+        .pm-thumbs::-webkit-scrollbar-track { background: transparent; }
+        .pm-thumbs::-webkit-scrollbar-thumb { background: #182444; border-radius: 8px; }
+        .pm-thumbs::-webkit-scrollbar-thumb:hover { background: #2dd4bf; }
+        .pm-details::-webkit-scrollbar { width: 6px; }
+        .pm-details::-webkit-scrollbar-track { background: transparent; }
+        .pm-details::-webkit-scrollbar-thumb { background: #182444; border-radius: 8px; }
+
         /* اسکرول‌بار */
         ::-webkit-scrollbar { width: 9px; }
         ::-webkit-scrollbar-track { background: #0b1220; }
@@ -322,28 +343,199 @@
         });
     });
 
-    // مودال نمونه‌کار
-    const modal = document.getElementById('portfolio-modal');
-    const modalContent = document.getElementById('modal-content');
+    // ═══════════ مودال و گالری نمونه‌کار ═══════════
+    (() => {
+        const isFa = document.documentElement.lang === 'fa';
+        const faNum = (v) => isFa ? String(v).replace(/\d/g, (d) => '۰۱۲۳۴۵۶۷۸۹'[d]) : String(v);
 
-    document.querySelectorAll('.portfolio-item [data-open]').forEach((trigger) => {
-        trigger.addEventListener('click', () => {
-            const template = trigger.closest('.portfolio-item').querySelector('.portfolio-data');
-            if (template && modalContent) {
-                modalContent.innerHTML = template.innerHTML;
-                modal.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
+        const modal = document.getElementById('portfolio-modal');
+        if (!modal) return;
+
+        const pmImage       = document.getElementById('pm-image');
+        const pmPlaceholder = document.getElementById('pm-placeholder');
+        const pmInitial     = document.getElementById('pm-initial');
+        const pmPrev        = document.getElementById('pm-prev');
+        const pmNext        = document.getElementById('pm-next');
+        const pmCounter     = document.getElementById('pm-counter');
+        const pmExpand      = document.getElementById('pm-expand');
+        const pmThumbs      = document.getElementById('pm-thumbs');
+        const pmDetails     = document.getElementById('pm-details');
+
+        const lightbox  = document.getElementById('portfolio-lightbox');
+        const lbImage   = document.getElementById('lb-image');
+        const lbPrev    = document.getElementById('lb-prev');
+        const lbNext    = document.getElementById('lb-next');
+        const lbCounter = document.getElementById('lb-counter');
+
+        let slides = [];
+        let index  = 0;
+        let alt    = '';
+
+        const multiple = () => slides.length > 1;
+
+        // بارگذاری نرم تصویر با محو شدن
+        function fadeSwap(img, url) {
+            if (!img || !url) return;
+            img.style.opacity = '0';
+            const pre = new Image();
+            pre.onload = () => {
+                img.src = url;
+                requestAnimationFrame(() => { img.style.opacity = '1'; });
+            };
+            pre.src = url;
+        }
+
+        function buildThumbs() {
+            if (!pmThumbs) return;
+            pmThumbs.innerHTML = '';
+            slides.forEach((url, i) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'h-16 w-24 shrink-0 overflow-hidden rounded-xl border border-white/10 transition hover:opacity-90';
+
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = '';
+                img.loading = 'lazy';
+                img.className = 'h-full w-full object-cover';
+
+                btn.appendChild(img);
+                btn.addEventListener('click', () => { index = i; renderStage(); });
+                pmThumbs.appendChild(btn);
+            });
+        }
+
+        function renderStage() {
+            if (!slides.length) {
+                pmImage?.classList.add('hidden');
+                pmPlaceholder?.classList.remove('hidden');
+                pmPrev?.classList.add('hidden');
+                pmNext?.classList.add('hidden');
+                pmCounter?.classList.add('hidden');
+                pmExpand?.classList.add('hidden');
+                pmThumbs?.classList.add('hidden');
+                return;
             }
-        });
-    });
 
-    function closeModal() {
-        modal?.classList.add('hidden');
-        document.body.style.overflow = '';
-    }
-    modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-    document.querySelectorAll('[data-close-modal]').forEach((btn) => btn.addEventListener('click', closeModal));
+            pmPlaceholder?.classList.add('hidden');
+            pmImage?.classList.remove('hidden');
+            fadeSwap(pmImage, slides[index]);
+            if (pmImage) pmImage.alt = alt;
+
+            pmPrev?.classList.toggle('hidden', !multiple());
+            pmNext?.classList.toggle('hidden', !multiple());
+            pmCounter?.classList.toggle('hidden', !multiple());
+            if (pmCounter) pmCounter.textContent = faNum(index + 1) + ' / ' + faNum(slides.length);
+
+            if (pmThumbs) {
+                pmThumbs.classList.toggle('hidden', !multiple());
+                [...pmThumbs.children].forEach((btn, i) => {
+                    btn.classList.toggle('ring-2', i === index);
+                    btn.classList.toggle('ring-brand-400', i === index);
+                    btn.classList.toggle('opacity-100', i === index);
+                    btn.classList.toggle('opacity-50', i !== index);
+                });
+                pmThumbs.children[index]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+        }
+
+        function go(i) {
+            if (!slides.length) return;
+            index = (i + slides.length) % slides.length;
+            renderStage();
+            if (lightbox && !lightbox.classList.contains('hidden')) updateLightbox();
+        }
+
+        function openModal(article) {
+            try { slides = JSON.parse(article.dataset.gallery || '[]'); } catch (e) { slides = []; }
+            alt = article.dataset.title || '';
+            index = 0;
+
+            if (pmInitial) pmInitial.textContent = article.dataset.initial || '★';
+            buildThumbs();
+
+            const tpl = article.querySelector('.portfolio-data');
+            if (pmDetails) pmDetails.innerHTML = tpl ? tpl.innerHTML : '';
+
+            renderStage();
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            closeLightbox();
+            document.body.style.overflow = '';
+        }
+
+        // ─── لایت‌باکس تمام‌صفحه ───
+        function updateLightbox() {
+            if (!lightbox) return;
+            fadeSwap(lbImage, slides[index]);
+            if (lbImage) lbImage.alt = alt;
+            if (lbCounter) lbCounter.textContent = faNum(index + 1) + ' / ' + faNum(slides.length);
+            lbPrev?.classList.toggle('hidden', !multiple());
+            lbNext?.classList.toggle('hidden', !multiple());
+            lbCounter?.classList.toggle('hidden', !multiple());
+        }
+
+        function openLightbox() {
+            if (!lightbox || !slides.length) return;
+            updateLightbox();
+            lightbox.classList.remove('hidden');
+            lightbox.classList.add('flex');
+        }
+
+        function closeLightbox() {
+            if (!lightbox) return;
+            lightbox.classList.add('hidden');
+            lightbox.classList.remove('flex');
+        }
+
+        // ─── رویدادها ───
+        document.querySelectorAll('.portfolio-item [data-open]').forEach((trigger) => {
+            trigger.addEventListener('click', () => {
+                const article = trigger.closest('.portfolio-item');
+                if (article) openModal(article);
+            });
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (!e.target.closest('.pm-shell')) closeModal();
+        });
+
+        pmPrev?.addEventListener('click', () => go(index - 1));
+        pmNext?.addEventListener('click', () => go(index + 1));
+        pmExpand?.addEventListener('click', openLightbox);
+        pmImage?.addEventListener('click', openLightbox);
+
+        lbPrev?.addEventListener('click', () => go(index - 1));
+        lbNext?.addEventListener('click', () => go(index + 1));
+        lightbox?.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+
+        document.querySelectorAll('[data-close-modal]').forEach((btn) => btn.addEventListener('click', closeModal));
+        document.querySelectorAll('[data-close-lightbox]').forEach((btn) => btn.addEventListener('click', closeLightbox));
+
+        // کیبورد: Esc برای بستن، فلش‌ها برای جابه‌جایی (در فارسی جهت فلش‌ها معکوس است)
+        document.addEventListener('keydown', (e) => {
+            const lbOpen = lightbox && !lightbox.classList.contains('hidden');
+            const mOpen  = !modal.classList.contains('hidden');
+
+            if (e.key === 'Escape') {
+                if (lbOpen) closeLightbox();
+                else if (mOpen) closeModal();
+                return;
+            }
+
+            if (!mOpen) return;
+
+            const back  = isFa ? 'ArrowRight' : 'ArrowLeft';
+            const forth = isFa ? 'ArrowLeft'  : 'ArrowRight';
+
+            if (e.key === back)  go(index - 1);
+            if (e.key === forth) go(index + 1);
+        });
+    })();
 
     // توست فلش
     const toast = document.getElementById('flash-toast');

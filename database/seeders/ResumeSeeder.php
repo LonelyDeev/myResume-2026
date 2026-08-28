@@ -44,7 +44,7 @@ class ResumeSeeder extends Seeder
             'job_title_en'  => 'Back-End Developer | Laravel & PHP Specialist',
             'tagline'       => 'ساخت سیستم‌های وب مقیاس‌پذیر با Laravel — از فروشگاه چندفروشندگی تا پلتفرم‌های هوش مصنوعی',
             'tagline_en'    => 'Building scalable web systems with Laravel — from multi-vendor stores to AI-powered platforms',
-            'bio'           => "برنامه‌نویس وب با بیش از ۵ سال تجربه عملی در طراحی و توسعه سایت‌ها و برنامه‌های کاربردی تحت وب.\n"
+            'bio'           => "برنامه‌نویس وب با بیش از 7 سال تجربه عملی در طراحی و توسعه سایت‌ها و برنامه‌های کاربردی تحت وب.\n"
                 . "تخصص اصلی من توسعه بک‌اند با فریم‌ورک Laravel است؛ از طراحی معماری دیتابیس و ساخت REST API تا پیاده‌سازی درگاه‌های پرداخت و امن‌سازی اپلیکیشن‌ها بر اساس اصول OWASP.\n"
                 . "در این مدت بیش از ۱۲ پروژه تخصصی — شامل فروشگاه چندفروشندگی با معماری ماژولار، پلتفرم مدیریت حمل‌ونقل، چت‌بات هوش مصنوعی و افزونه‌های سفارشی وردپرس — طراحی، توسعه و راه‌اندازی کرده‌ام.",
             'bio_en'        => "A web developer with 5+ years of hands-on experience in designing and developing websites and web applications.\n"
@@ -473,7 +473,7 @@ class ResumeSeeder extends Seeder
         Setting::create([
             'site_title'            => 'مهدی یوسفی',
             'site_title_en'         => 'Mahdi Yousefi',
-            'meta_description'      => 'رزومه و نمونه‌کارهای مهدی یوسفی — توسعه‌دهنده Back-End و متخصص Laravel و PHP با بیش از ۵ سال تجربه',
+            'meta_description'      => 'رزومه و نمونه‌کارهای مهدی یوسفی — توسعه‌دهنده Back-End و متخصص Laravel و PHP با بیش از 7 سال تجربه',
             'meta_description_en'   => "Mahdi Yousefi's resume and portfolio — Back-End Developer and Laravel & PHP specialist with 5+ years of experience",
             'footer_text'           => 'طراحی و توسعه با Laravel',
             'footer_text_en'        => 'Designed & developed with Laravel',

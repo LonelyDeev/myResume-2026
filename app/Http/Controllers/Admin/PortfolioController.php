@@ -27,7 +27,8 @@ class PortfolioController extends Controller
     {
         $validated = $this->validated($request);
 
-        $validated['image_path'] = $this->uploadMedia($request->file('image'), 'portfolios');
+        $validated['image_path']    = $this->uploadMedia($request->file('image'), 'portfolios');
+        $validated['gallery_paths'] = $this->uploadGallery($request);
 
         Portfolio::create($validated);
 
@@ -45,7 +46,8 @@ class PortfolioController extends Controller
     {
         $validated = $this->validated($request);
 
-        $validated['image_path'] = $this->uploadMedia($request->file('image'), 'portfolios', $portfolio->image_path);
+        $validated['image_path']    = $this->uploadMedia($request->file('image'), 'portfolios', $portfolio->image_path);
+        $validated['gallery_paths'] = $this->uploadGallery($request, $portfolio);
 
         $portfolio->update($validated);
 
@@ -58,9 +60,41 @@ class PortfolioController extends Controller
     {
         $this->deleteMedia($portfolio->image_path);
 
+        foreach ((array) ($portfolio->gallery_paths ?? []) as $path) {
+            $this->deleteMedia($path);
+        }
+
         $portfolio->delete();
 
         return back()->with('success', 'نمونه‌کار حذف شد.');
+    }
+
+    /**
+     * آپلود تصاویر گالری چندتایی + حذف تصاویر تیک‌خورده در حالت ویرایش
+     */
+    private function uploadGallery(Request $request, ?Portfolio $portfolio = null): array
+    {
+        $paths = (array) ($portfolio?->gallery_paths ?? []);
+
+        // تصاویر انتخاب‌شده برای حذف
+        $removed = array_filter((array) $request->input('remove_gallery', []));
+
+        if ($removed) {
+            foreach ($removed as $path) {
+                $this->deleteMedia((string) $path);
+            }
+
+            $paths = array_values(array_diff($paths, $removed));
+        }
+
+        // فایل‌های جدید
+        foreach ((array) $request->file('gallery', []) as $file) {
+            if ($file && $file->isValid()) {
+                $paths[] = $file->store('portfolios', 'public');
+            }
+        }
+
+        return array_values($paths);
     }
 
     private function validated(Request $request): array
@@ -77,6 +111,9 @@ class PortfolioController extends Controller
             'description_en' => ['nullable', 'string'],
             'tech_tags'      => ['nullable', 'string', 'max:500'],
             'image'          => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'gallery'        => ['nullable', 'array', 'max:12'],
+            'gallery.*'      => ['image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            'remove_gallery' => ['nullable', 'array'],
             'is_featured'    => ['nullable', 'boolean'],
             'sort_order'     => ['nullable', 'integer', 'min:0'],
             'is_active'      => ['nullable', 'boolean'],
