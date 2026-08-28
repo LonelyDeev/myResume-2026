@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'fa' ? 'rtl' : 'ltr' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ $settings->t('site_title') }} — {{ $info->t('name') }}</title>
+    <meta name="description" content="{{ $settings->t('meta_description') }}">
+    <meta property="og:title" content="{{ $info->t('name') }} | {{ $info->t('job_title') }}">
+    <meta property="og:description" content="{{ $settings->t('meta_description') }}">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%230b1220'/><text x='50' y='68' font-size='52' font-family='Arial' font-weight='bold' text-anchor='middle' fill='%232dd4bf'>M</text></svg>">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: { 950: '#070d1a', 900: '#0b1220', 800: '#111a2e', 700: '#182444' },
+                        brand: { 300: '#5eead4', 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488' },
+                        gold: { 400: '#fbbf24', 500: '#f59e0b' },
+                    },
+                    fontFamily: {
+                        sans: ["{{ app()->getLocale() === 'fa' ? 'Vazirmatn' : 'Inter' }}", "Vazirmatn", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+                    },
+                    animation: {
+                        float: 'float 6s ease-in-out infinite',
+                        'float-slow': 'float 9s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-16px)' },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <style type="text/tailwindcss">
+        .glass    { @apply bg-white/[0.04] border border-white/10 backdrop-blur-xl; }
+        .chip     { @apply inline-flex items-center gap-2 rounded-full border border-brand-400/30 bg-brand-400/10 px-4 py-1.5 text-xs font-bold text-brand-300; }
+        .f-btn    { @apply inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-bold transition select-none; }
+        .f-btn-primary { @apply f-btn bg-gradient-to-l from-brand-500 to-sky-500 text-navy-950 shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 hover:-translate-y-0.5; }
+        .f-btn-ghost   { @apply f-btn border border-white/15 bg-white/5 text-white hover:border-brand-400/50 hover:bg-white/10 hover:-translate-y-0.5; }
+        .f-input  { @apply w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-3.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-brand-400/60 focus:bg-white/[0.07] focus:ring-4 focus:ring-brand-400/10; }
+        .sec-title { @apply text-3xl font-black text-white md:text-4xl; }
+        .tech-tag { @apply inline-flex items-center rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-bold text-slate-300; }
+    </style>
+
+    <style>
+        html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+
+        /* الگوی گرید پس‌زمینه */
+        .bg-grid {
+            background-image:
+                linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, 0.06) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 40%, transparent 100%);
+            -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 40%, transparent 100%);
+        }
+
+        /* منوی اسکرول فعال */
+        .nav-link.active { color: #5eead4; }
+        .nav-link.active::after { transform: scaleX(1); }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            inset-inline-start: 0;
+            bottom: -6px;
+            width: 100%;
+            height: 2px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, #14b8a6, #38bdf8);
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform .3s ease;
+        }
+
+        /* کرسر افکت تایپ */
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            margin-inline-start: 4px;
+            background: #2dd4bf;
+            animation: blink 1s step-end infinite;
+            vertical-align: -0.15em;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* اسکرول‌بار */
+        ::-webkit-scrollbar { width: 9px; }
+        ::-webkit-scrollbar-track { background: #0b1220; }
+        ::-webkit-scrollbar-thumb { background: #182444; border-radius: 8px; }
+        ::-webkit-scrollbar-thumb:hover { background: #2dd4bf; }
+
+        ::selection { background: rgba(45, 212, 191, 0.3); color: #fff; }
+    </style>
+</head>
+<body class="bg-navy-900 font-sans text-slate-300 antialiased">
+
+@php
+    $navItems = [];
+    if ($settings->show_about)        $navItems[] = ['id' => 'about',        'label' => __('app.nav.about')];
+    if ($settings->show_experience)   $navItems[] = ['id' => 'experience',   'label' => __('app.nav.experience')];
+    if ($settings->show_education)    $navItems[] = ['id' => 'education',    'label' => __('app.nav.education')];
+    if ($settings->show_skills)       $navItems[] = ['id' => 'skills',       'label' => __('app.nav.skills')];
+    if ($settings->show_portfolios)   $navItems[] = ['id' => 'portfolios',   'label' => __('app.nav.portfolio')];
+    if ($settings->show_testimonials) $navItems[] = ['id' => 'testimonials', 'label' => __('app.nav.testimonials')];
+    if ($settings->show_contact)      $navItems[] = ['id' => 'contact',      'label' => __('app.nav.contact')];
+    $otherLocale = app()->getLocale() === 'fa' ? 'en' : 'fa';
+@endphp
+
+{{-- ═════════════════════════ ناوبری ═════════════════════════ --}}
+<header id="main-nav" class="fixed inset-x-0 top-0 z-50 transition-all duration-300">
+    <nav class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 lg:px-8">
+        <a href="{{ route('home', ['locale' => app()->getLocale()]) }}"
+           class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-400 to-sky-500 text-base font-black text-navy-950 shadow-lg shadow-brand-500/25 transition hover:scale-105">
+            {{ mb_substr($info->t('name_en') ?: $info->t('name'), 0, 1) }}
+        </a>
+
+        {{-- لینک‌ها --}}
+        <ul class="hidden items-center gap-7 lg:flex">
+            @foreach ($navItems as $item)
+                <li>
+                    <a href="#{{ $item['id'] }}" data-spy="{{ $item['id'] }}"
+                       class="nav-link relative text-sm font-bold text-slate-300 transition hover:text-brand-300">
+                        {{ $item['label'] }}
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+
+        <div class="flex items-center gap-3">
+            {{-- سوییچ زبان --}}
+            <a href="{{ route('lang.switch', $otherLocale) }}"
+               class="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3.5 py-2 text-xs font-black text-slate-300 transition hover:border-brand-400/40 hover:text-brand-300"
+               title="{{ __('app.nav.switch_lang') }}">
+                <i class="fa-solid fa-globe text-brand-400"></i>
+                {{ $otherLocale === 'fa' ? 'فارسی' : 'English' }}
+            </a>
+
+            {{-- همبرگر موبایل --}}
+            <button id="nav-burger" class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white lg:hidden">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    {{-- منوی موبایل --}}
+    <div id="nav-mobile" class="hidden border-t border-white/10 bg-navy-950/95 backdrop-blur-xl lg:hidden">
+        <ul class="mx-auto max-w-6xl space-y-1 px-5 py-4">
+            @foreach ($navItems as $item)
+                <li>
+                    <a href="#{{ $item['id'] }}" class="mobile-link block rounded-xl px-4 py-3 text-sm font-bold text-slate-300 transition hover:bg-white/5 hover:text-brand-300">
+                        <i class="fa-solid fa-angle-{{ app()->getLocale() === 'fa' ? 'left' : 'right' }} me-2 text-brand-400"></i>
+                        {{ $item['label'] }}
+                    </a>
+                </li>
+            @endforeach
+        </ul>
+    </div>
+</header>
+
+{{-- ═════════════════════════ محتوا ═════════════════════════ --}}
+<main>
+    {{-- توست پیام موفقیت فرم تماس --}}
+    @if (session('contact_success'))
+        <div id="flash-toast"
+             class="fixed top-24 start-1/2 z-[70] flex -translate-x-1/2 items-center gap-3 rounded-2xl border border-brand-400/30 bg-navy-800/95 px-6 py-4 text-sm font-bold text-white shadow-2xl shadow-brand-500/20 backdrop-blur transition-all duration-400"
+             dir="auto">
+            <span class="flex h-9 w-9 items-center justify-center rounded-full bg-brand-400/15 text-brand-300">
+                <i class="fa-solid fa-check"></i>
+            </span>
+            {{ session('contact_success') }}
+        </div>
+    @endif
+
+    @yield('content')
+</main>
+
+{{-- ═════════════════════════ فوتر ═════════════════════════ --}}
+<footer class="border-t border-white/10 bg-navy-950/60 py-10">
+    <div class="mx-auto flex max-w-6xl flex-col items-center gap-5 px-5 lg:px-8">
+        <a href="{{ route('home', ['locale' => app()->getLocale()]) }}"
+           class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-400 to-sky-500 text-lg font-black text-navy-950">
+            {{ mb_substr($info->t('name_en') ?: $info->t('name'), 0, 1) }}
+        </a>
+
+        <div class="flex items-center gap-2">
+            @foreach ($socials as $social)
+                <a href="{{ $social->url }}" target="_blank" rel="noopener" title="{{ $social->platform }}"
+                   class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-400 transition hover:border-brand-400/50 hover:text-brand-300">
+                    <i class="{{ $social->icon }}"></i>
+                </a>
+            @endforeach
+        </div>
+
+        <p class="text-center text-xs leading-relaxed text-slate-500">
+            © {{ now()->year }} {{ $info->t('name') }} — {{ $settings->t('footer_text') }}
+        </p>
+    </div>
+</footer>
+
+{{-- دکمه بازگشت به بالا --}}
+<button id="back-to-top"
+        class="fixed bottom-6 end-6 z-40 flex h-11 w-11 translate-y-20 items-center justify-center rounded-xl bg-brand-500 text-navy-950 opacity-0 shadow-lg shadow-brand-500/40 transition-all hover:bg-brand-400"
+        aria-label="بازگشت به بالا">
+    <i class="fa-solid fa-arrow-up"></i>
+</button>
+
+{{-- ═════════════════════════ اسکریپت‌ها ═════════════════════════ --}}
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script>
+    // انیمیشن اسکرول
+    AOS.init({ once: true, duration: 700, offset: 60, easing: 'ease-out-cubic' });
+
+    // ناوبری هنگام اسکرول
+    const nav = document.getElementById('main-nav');
+    const backToTop = document.getElementById('back-to-top');
+
+    window.addEventListener('scroll', () => {
+        const scrolled = window.scrollY > 30;
+        nav.classList.toggle('bg-navy-950/85', scrolled);
+        nav.classList.toggle('backdrop-blur-xl', scrolled);
+        nav.classList.toggle('shadow-lg', scrolled);
+        nav.classList.toggle('shadow-black/20', scrolled);
+
+        // دکمه بازگشت به بالا
+        const showTop = window.scrollY > 500;
+        backToTop.classList.toggle('opacity-0', !showTop);
+        backToTop.classList.toggle('translate-y-20', !showTop);
+
+        // اسکرول‌اسپای
+        let current = '';
+        document.querySelectorAll('section[id]').forEach((section) => {
+            if (window.scrollY >= section.offsetTop - 140) current = section.id;
+        });
+        document.querySelectorAll('.nav-link').forEach((link) => {
+            link.classList.toggle('active', link.dataset.spy === current);
+        });
+    }, { passive: true });
+
+    backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // منوی موبایل
+    const burger = document.getElementById('nav-burger');
+    const mobileMenu = document.getElementById('nav-mobile');
+    burger.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+    document.querySelectorAll('.mobile-link').forEach((link) => {
+        link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+    });
+
+    // افکت تایپ
+    (function () {
+        const roles = @json($info->jobTitles());
+        const el = document.getElementById('typing-text');
+        if (!el || !roles.length) return;
+
+        let roleIndex = 0, charIndex = 0, deleting = false;
+
+        function tick() {
+            const current = roles[roleIndex];
+            el.textContent = current.slice(0, charIndex);
+
+            if (!deleting && charIndex < current.length) {
+                charIndex++;
+                setTimeout(tick, 70);
+            } else if (!deleting) {
+                deleting = true;
+                setTimeout(tick, 1800);
+            } else if (charIndex > 0) {
+                charIndex--;
+                setTimeout(tick, 38);
+            } else {
+                deleting = false;
+                roleIndex = (roleIndex + 1) % roles.length;
+                setTimeout(tick, 400);
+            }
+        }
+        tick();
+    })();
+
+    // انیمیشن نوار مهارت‌ها
+    const skillObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.style.width = entry.target.dataset.level + '%';
+                skillObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.4 });
+    document.querySelectorAll('.skill-bar-fill').forEach((bar) => skillObserver.observe(bar));
+
+    // فیلتر نمونه‌کارها
+    document.querySelectorAll('.portfolio-filter').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.portfolio-filter').forEach((b) => {
+                b.classList.remove('bg-brand-500', 'text-navy-950', 'border-brand-500');
+                b.classList.add('border-white/10', 'bg-white/5', 'text-slate-300');
+            });
+            btn.classList.add('bg-brand-500', 'text-navy-950', 'border-brand-500');
+            btn.classList.remove('border-white/10', 'bg-white/5', 'text-slate-300');
+
+            const filter = btn.dataset.filter;
+            document.querySelectorAll('.portfolio-item').forEach((card) => {
+                const show = filter === '*' || card.dataset.category === filter;
+                card.classList.toggle('hidden', !show);
+            });
+        });
+    });
+
+    // مودال نمونه‌کار
+    const modal = document.getElementById('portfolio-modal');
+    const modalContent = document.getElementById('modal-content');
+
+    document.querySelectorAll('.portfolio-item [data-open]').forEach((trigger) => {
+        trigger.addEventListener('click', () => {
+            const template = trigger.closest('.portfolio-item').querySelector('.portfolio-data');
+            if (template && modalContent) {
+                modalContent.innerHTML = template.innerHTML;
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    });
+
+    function closeModal() {
+        modal?.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+    modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+    document.querySelectorAll('[data-close-modal]').forEach((btn) => btn.addEventListener('click', closeModal));
+
+    // توست فلش
+    const toast = document.getElementById('flash-toast');
+    if (toast) {
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-16px)';
+            setTimeout(() => toast.remove(), 400);
+        }, 4500);
+    }
+</script>
+</body>
+</html>
