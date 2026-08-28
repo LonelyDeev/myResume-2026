@@ -40,7 +40,7 @@
                 @endif
 
                 @if ($info->cv_path)
-                    <a href="{{ assets($info->cv_path) }}" download class="f-btn-ghost">
+                    <a href="{{ asset($info->cv_path) }}" download class="f-btn-ghost">
                         <i class="fa-solid fa-file-arrow-down text-brand-400"></i> {{ __('app.hero.download_cv') }}
                     </a>
                 @endif
@@ -72,7 +72,7 @@
 
                 <div class="relative h-full w-full overflow-hidden rounded-full border-4 border-navy-800 bg-navy-800 shadow-2xl">
                     @if ($info->avatar_path)
-                        <img src="{{ assets($info->avatar_path) }}" alt="{{ $info->t('name') }}" class="h-full w-full object-cover">
+                        <img src="{{ asset($info->avatar_path) }}" alt="{{ $info->t('name') }}" class="h-full w-full object-cover">
                     @else
                         <div class="flex h-full w-full items-center justify-center bg-gradient-to-br from-navy-700 to-navy-950">
                             <span class="bg-gradient-to-l from-brand-300 to-sky-400 bg-clip-text text-8xl font-black text-transparent">

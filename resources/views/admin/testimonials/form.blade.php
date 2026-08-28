@@ -46,7 +46,7 @@
             <div class="flex flex-wrap items-center gap-5">
                 <div class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100">
                     @if ($item->avatar_path)
-                        <img id="avatar-preview" src="{{ assets($item->avatar_path) }}" class="h-full w-full object-cover">
+                        <img id="avatar-preview" src="{{ asset($item->avatar_path) }}" class="h-full w-full object-cover">
                     @else
                         <i class="fa-regular fa-user text-xl text-slate-300"></i>
                     @endif

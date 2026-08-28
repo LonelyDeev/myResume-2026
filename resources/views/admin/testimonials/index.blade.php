@@ -19,7 +19,7 @@
             <div class="flex flex-wrap items-center gap-4 border-b border-slate-100 px-6 py-4 transition last:border-0 hover:bg-slate-50">
                 <div class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-100 text-sm font-black text-slate-500">
                     @if ($item->avatar_path)
-                        <img src="{{ assets($item->avatar_path) }}" class="h-full w-full object-cover">
+                        <img src="{{ asset($item->avatar_path) }}" class="h-full w-full object-cover">
                     @else
                         {{ mb_substr($item->name, 0, 1) }}
                     @endif

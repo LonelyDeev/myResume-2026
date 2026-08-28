@@ -54,12 +54,12 @@ class Portfolio extends Model
     public function coverUrl(): ?string
     {
         if ($this->image_path) {
-            return assets($this->image_path);
+            return asset($this->image_path);
         }
 
         $gallery = (array) ($this->gallery_paths ?? []);
 
-        return @$gallery[0] ? assets(@$gallery[0]) : null;
+        return @$gallery[0] ? asset(@$gallery[0]) : null;
     }
 
     /**
@@ -76,7 +76,7 @@ class Portfolio extends Model
         return collect($paths)
             ->filter()
             ->unique()
-            ->map(fn (string $path) => assets($path))
+            ->map(fn (string $path) => asset($path))
             ->values()
             ->all();
     }
