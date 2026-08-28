@@ -29,7 +29,7 @@
                     <figcaption class="flex items-center gap-3.5 border-t border-white/10 pt-5">
                         <span class="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-brand-400/25 to-sky-500/25 text-base font-black text-brand-300">
                             @if ($testimonial->avatar_path)
-                                <img src="{{ Storage::url($testimonial->avatar_path) }}" alt="{{ $testimonial->t('name') }}" class="h-full w-full object-cover">
+                                <img src="{{ assets($testimonial->avatar_path) }}" alt="{{ $testimonial->t('name') }}" class="h-full w-full object-cover">
                             @else
                                 {{ mb_substr($testimonial->t('name'), 0, 1) }}
                             @endif

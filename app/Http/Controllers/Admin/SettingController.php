@@ -47,7 +47,7 @@ class SettingController extends Controller
         }
 
         $settings->update($validated);
-        Artisan::call('storage:link');
+
         return back()->with('success', 'تنظیمات سایت ذخیره شد.');
     }
 }

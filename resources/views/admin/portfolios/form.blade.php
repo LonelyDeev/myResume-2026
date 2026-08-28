@@ -107,7 +107,7 @@
                     <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
                         @foreach ($item->gallery_paths as $path)
                             <label class="group relative block cursor-pointer overflow-hidden rounded-2xl border border-slate-200">
-                                <img src="{{ Storage::url($path) }}" class="aspect-[4/3] w-full object-cover transition group-hover:scale-105">
+                                <img src="{{ assets($path) }}" class="aspect-[4/3] w-full object-cover transition group-hover:scale-105">
                                 <input type="checkbox" name="remove_gallery[]" value="{{ $path }}" class="peer sr-only">
                                 {{-- حالت عادی: نشانگر انتخاب --}}
                                 <span class="absolute inset-0 flex items-center justify-center bg-navy-950/0 transition peer-checked:bg-red-600/70 group-hover:bg-navy-950/30">

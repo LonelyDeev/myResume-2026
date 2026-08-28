@@ -20,7 +20,7 @@
                 {{-- تصویر یا گرادیان --}}
                 <div class="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl">
                     @if ($item->image_path)
-                        <img src="{{ Storage::url($item->image_path) }}" class="h-full w-full object-cover">
+                        <img src="{{ assets($item->image_path) }}" class="h-full w-full object-cover">
                     @else
                         <span class="flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-500 to-sky-600 text-lg font-black text-white">
                             {{ $item->initial() }}

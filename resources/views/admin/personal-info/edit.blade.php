@@ -138,7 +138,7 @@
                     <div class="flex items-center gap-4">
                         <div class="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-slate-100">
                             @if ($info->avatar_path)
-                                <img id="avatar-preview" src="{{ Storage::url($info->avatar_path) }}" class="h-full w-full object-cover">
+                                <img id="avatar-preview" src="{{ assets($info->avatar_path) }}" class="h-full w-full object-cover">
                             @else
                                 <i class="fa-solid fa-user text-2xl text-slate-300"></i>
                             @endif

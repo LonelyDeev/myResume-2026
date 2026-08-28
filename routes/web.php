@@ -90,6 +90,7 @@ Route::prefix('admin')
     });
 
 // ───────────────────── روت‌های Auth (Breeze) را نگه دارید ──────────────────
+//require __DIR__ . '/auth.php';
 
 Auth::routes();
 
