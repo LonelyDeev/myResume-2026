@@ -50,7 +50,7 @@
                         </span>
                         <div class="min-w-0">
                             <p class="text-xs font-bold text-slate-500">Telegram</p>
-                            <p dir="ltr" class="text-start text-sm font-bold text-white">@{{ $info->telegram }}</p>
+                            <p dir="ltr" class="text-start text-sm font-bold text-white">{{ '@'.$info->telegram }}</p>
                         </div>
                     </a>
                 @endif
@@ -81,17 +81,27 @@
                                    placeholder="{{ __('app.contact.name_placeholder') }}">
                         </div>
                         <div>
+                            <label class="mb-2 block text-xs font-black text-slate-400">{{ __('app.contact.subject') }}</label>
+                            <input type="text" name="subject" value="{{ old('subject') }}" class="f-input"
+                                   placeholder="{{ __('app.contact.subject_placeholder') }}">
+                        </div>
+
+                    </div>
+                    <div class="grid gap-5 md:grid-cols-2">
+                        <div>
                             <label class="mb-2 block text-xs font-black text-slate-400">{{ __('app.contact.email') }} <span class="text-brand-400">*</span></label>
                             <input type="email" name="email" value="{{ old('email') }}" dir="ltr" required
                                    class="f-input {{ $errors->has('email') ? '!border-red-400/60' : '' }}"
                                    placeholder="you@example.com">
                         </div>
-                    </div>
 
-                    <div>
-                        <label class="mb-2 block text-xs font-black text-slate-400">{{ __('app.contact.subject') }}</label>
-                        <input type="text" name="subject" value="{{ old('subject') }}" class="f-input"
-                               placeholder="{{ __('app.contact.subject_placeholder') }}">
+                        <div>
+                            <label class="mb-2 block text-xs font-black text-slate-400">{{ __('app.contact.mobile') }} <span class="text-brand-400">*</span></label>
+                            <input type="text" name="mobile" value="{{ old('mobile') }}" dir="ltr" required
+                                   class="f-input {{ $errors->has('mobile') ? '!border-red-400/60' : '' }}"
+                                   placeholder="0912111111">
+                        </div>
+
                     </div>
 
                     <div>

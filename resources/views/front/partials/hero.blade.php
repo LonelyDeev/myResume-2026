@@ -99,7 +99,7 @@
                     <i class="fa-solid fa-code text-sm"></i>
                 </span>
                 <div>
-                    <p class="text-xs font-black text-white">+5 {{ __('app.hero.years') }}</p>
+                    <p class="text-xs font-black text-white">+7 {{ __('app.hero.years') }}</p>
                     <p class="text-[10px] text-slate-400">{{ __('app.hero.experience') }}</p>
                 </div>
             </div>

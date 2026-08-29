@@ -80,6 +80,7 @@ return [
     'validation' => [
         'name'          => 'The name field is required.',
         'email'         => 'The email field is required.',
+        'mobile'         => 'The mobile field is required.',
         'email_invalid' => 'Please enter a valid email address.',
         'message'       => 'The message field is required.',
     ],

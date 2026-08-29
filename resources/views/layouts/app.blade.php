@@ -128,6 +128,9 @@
         ::-webkit-scrollbar-thumb:hover { background: #2dd4bf; }
 
         ::selection { background: rgba(45, 212, 191, 0.3); color: #fff; }
+        .dir-ltr{
+            direction: ltr;
+        }
     </style>
 </head>
 <body class="bg-navy-900 font-sans text-slate-300 antialiased">
@@ -145,11 +148,32 @@
 @endphp
 
 {{-- ═════════════════════════ ناوبری ═════════════════════════ --}}
-<header id="main-nav" class="fixed inset-x-0 top-0 z-50 transition-all duration-300">
+<header id="main-nav" class=" inset-x-0 top-0 z-50 transition-all duration-300">
     <nav class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 lg:px-8">
         <a href="{{ route('home', ['locale' => app()->getLocale()]) }}"
-           class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-400 to-sky-500 text-base font-black text-navy-950 shadow-lg shadow-brand-500/25 transition hover:scale-105">
-            {{ mb_substr($info->t('name_en') ?: $info->t('name'), 0, 1) }}
+           class="flex h-11  items-center justify-center rounded-2xl from-brand-400 to-sky-500 text-base font-black text-navy-950 shadow-lg transition hover:scale-105 dir-ltr">
+            <svg width="180" height="44" viewBox="0 0 180 44" xmlns="http://www.w3.org/2000/svg" style="margin-right: -70px">
+                <defs>
+                    <linearGradient id="sealGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#33D6B9"></stop>
+                        <stop offset="100%" stop-color="#1AA88F"></stop>
+                    </linearGradient>
+                </defs>
+                <polygon points="22,3 38.45,12.5 38.45,31.5 22,41 5.55,31.5 5.55,12.5" fill="url(#sealGrad3)" stroke="#E0AC4E" stroke-width="1.6"></polygon>
+                <g stroke="#16211D" stroke-width="1.3" stroke-opacity="0.85">
+                    <line x1="22" y1="16" x2="15.5" y2="27"></line>
+                    <line x1="22" y1="16" x2="28.5" y2="27"></line>
+                    <line x1="15.5" y1="27" x2="28.5" y2="27"></line>
+                </g>
+                <g fill="#16211D">
+                    <circle cx="22" cy="16" r="2.3"></circle>
+                    <circle cx="15.5" cy="27" r="2.3"></circle>
+                    <circle cx="28.5" cy="27" r="2.3"></circle>
+                </g>
+                <text x="50" y="29" font-family="'Outfit','Segoe UI',sans-serif" font-weight="600" font-size="22" letter-spacing="-0.3">
+                    <tspan fill="#F4EFE4">web</tspan><tspan fill="#E0AC4E">lak</tspan>
+                </text>
+            </svg>
         </a>
 
         {{-- لینک‌ها --}}
@@ -216,8 +240,30 @@
 <footer class="border-t border-white/10 bg-navy-950/60 py-10">
     <div class="mx-auto flex max-w-6xl flex-col items-center gap-5 px-5 lg:px-8">
         <a href="{{ route('home', ['locale' => app()->getLocale()]) }}"
-           class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-400 to-sky-500 text-lg font-black text-navy-950">
-            {{ mb_substr($info->t('name_en') ?: $info->t('name'), 0, 1) }}
+           class="flex h-12 items-center justify-center rounded-2xl from-brand-400 to-sky-500 text-lg font-black text-navy-950 dir-ltr">
+            {{--{{ mb_substr($info->t('name_en') ?: $info->t('name'), 0, 1) }}--}}
+            <svg width="180" height="44" viewBox="0 0 180 44" xmlns="http://www.w3.org/2000/svg" style="margin-right: -53px">
+                <defs>
+                    <linearGradient id="sealGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#33D6B9"></stop>
+                        <stop offset="100%" stop-color="#1AA88F"></stop>
+                    </linearGradient>
+                </defs>
+                <polygon points="22,3 38.45,12.5 38.45,31.5 22,41 5.55,31.5 5.55,12.5" fill="url(#sealGrad3)" stroke="#E0AC4E" stroke-width="1.6"></polygon>
+                <g stroke="#16211D" stroke-width="1.3" stroke-opacity="0.85">
+                    <line x1="22" y1="16" x2="15.5" y2="27"></line>
+                    <line x1="22" y1="16" x2="28.5" y2="27"></line>
+                    <line x1="15.5" y1="27" x2="28.5" y2="27"></line>
+                </g>
+                <g fill="#16211D">
+                    <circle cx="22" cy="16" r="2.3"></circle>
+                    <circle cx="15.5" cy="27" r="2.3"></circle>
+                    <circle cx="28.5" cy="27" r="2.3"></circle>
+                </g>
+                <text x="50" y="29" font-family="'Outfit','Segoe UI',sans-serif" font-weight="600" font-size="22" letter-spacing="-0.3">
+                    <tspan fill="#F4EFE4">web</tspan><tspan fill="#E0AC4E">lak</tspan>
+                </text>
+            </svg>
         </a>
 
         <div class="flex items-center gap-2">
