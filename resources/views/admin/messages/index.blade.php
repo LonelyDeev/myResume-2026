@@ -30,6 +30,7 @@
                 </div>
 
                 <span dir="ltr" class="text-xs text-slate-400">{{ $message->email }}</span>
+                <span dir="ltr" class="text-xs text-slate-400">{{ $message->mobile }}</span>
                 <span class="shrink-0 text-[11px] text-slate-400">{{ $message->created_at->format('Y/m/d H:i') }}</span>
             </a>
         @empty

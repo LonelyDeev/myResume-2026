@@ -13,6 +13,7 @@
                         <div class="space-y-0.5 text-sm text-slate-500">
                             <p><i class="fa-solid fa-user w-5 text-slate-400"></i> {{ $message->name }}</p>
                             <p><i class="fa-solid fa-envelope w-5 text-slate-400"></i> <span dir="ltr">{{ $message->email }}</span></p>
+                            <p><i class="fa-solid fa-envelope w-5 text-slate-400"></i> <span dir="ltr">{{ $message->mobile }}</span></p>
                             <p><i class="fa-solid fa-calendar w-5 text-slate-400"></i> {{ $message->created_at->format('Y/m/d — H:i') }} ({{ $message->created_at->diffForHumans() }})</p>
                         </div>
                     </div>
