@@ -63,6 +63,7 @@ return [
         'visit'    => 'مشاهده پروژه',
         'client'   => 'کارفرما',
         'close'    => 'بستن',
+        'photos_count'    => 'تعداد تصاویر',
     ],
 
     'contact' => [

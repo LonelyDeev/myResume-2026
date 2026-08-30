@@ -63,6 +63,7 @@ return [
         'visit'    => 'Visit project',
         'client'   => 'Client',
         'close'    => 'Close',
+        'photos_count'    => 'photos count',
     ],
 
     'contact' => [
