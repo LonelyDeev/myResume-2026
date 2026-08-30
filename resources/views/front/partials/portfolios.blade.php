@@ -178,7 +178,7 @@
                     <div class="relative flex flex-col gap-4 p-5 pb-6 lg:p-7">
                         {{-- اسلاید اصلی --}}
                         <div class="group/stage relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-white/10 bg-navy-950">
-                            <img id="pm-image" src="" alt="" class="h-full cursor-zoom-in object-cover opacity-0 transition-opacity duration-300 m-0-auto">
+                            <img id="pm-image" src="" alt="" class="h-full cursor-zoom-in object-cover opacity-0 transition-opacity duration-300 m-0-auto" style="margin: 0 auto">
 
                             {{-- جایگزین گرادیانی وقتی تصویری وجود ندارد --}}
                             <div id="pm-placeholder" class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-brand-600/80 via-navy-700 to-sky-700/70">
