@@ -207,7 +207,7 @@
                         </div>
 
                         {{-- بندانگشتی‌ها --}}
-                        <div id="pm-thumbs" class="pm-thumbs hidden flex gap-2.5 overflow-x-auto pb-1"></div>
+                        <div id="pm-thumbs" class="pm-thumbs hidden gap-2.5 overflow-x-auto pb-1"></div>
                     </div>
 
                     {{-- ═══ پنل جزئیات ═══ --}}

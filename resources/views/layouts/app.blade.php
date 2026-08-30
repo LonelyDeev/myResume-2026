@@ -437,7 +437,7 @@
             slides.forEach((url, i) => {
                 const btn = document.createElement('button');
                 btn.type = 'button';
-                btn.className = 'h-16 w-24 shrink-0 overflow-hidden rounded-xl border border-white/10 transition hover:opacity-90';
+                btn.className = 'ml-2 h-16 w-24 shrink-0 overflow-hidden rounded-xl border border-white/10 transition hover:opacity-90';
 
                 const img = document.createElement('img');
                 img.src = url;
