@@ -69,6 +69,7 @@ return [
         'name'                => 'نام و نام خانوادگی',
         'name_placeholder'    => 'نام شما',
         'email'               => 'ایمیل',
+        'mobile'               => 'موبایل',
         'subject'             => 'موضوع',
         'subject_placeholder' => 'مثال: پیشنهاد همکاری',
         'message'             => 'متن پیام',

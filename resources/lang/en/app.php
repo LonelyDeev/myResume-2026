@@ -69,6 +69,7 @@ return [
         'name'                => 'Full Name',
         'name_placeholder'    => 'Your name',
         'email'               => 'Email',
+        'mobile'               => 'Phone Number',
         'subject'             => 'Subject',
         'subject_placeholder' => 'e.g. Job opportunity',
         'message'             => 'Message',
