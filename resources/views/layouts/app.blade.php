@@ -209,13 +209,14 @@
 
 @php
     $navItems = [];
-    if ($settings->show_about)        $navItems[] = ['id' => 'about',        'label' => __('app.nav.about')];
-    if ($settings->show_experience)   $navItems[] = ['id' => 'experience',   'label' => __('app.nav.experience')];
-    if ($settings->show_education)    $navItems[] = ['id' => 'education',    'label' => __('app.nav.education')];
-    if ($settings->show_skills)       $navItems[] = ['id' => 'skills',       'label' => __('app.nav.skills')];
-    if ($settings->show_portfolios)   $navItems[] = ['id' => 'portfolios',   'label' => __('app.nav.portfolio')];
-    if ($settings->show_testimonials) $navItems[] = ['id' => 'testimonials', 'label' => __('app.nav.testimonials')];
-    if ($settings->show_contact)      $navItems[] = ['id' => 'contact',      'label' => __('app.nav.contact')];
+    if (isset($settings) && $settings->show_about)        $navItems[] = ['id' => 'about',        'label' => __('app.nav.about')];
+    if (isset($settings) && $settings->show_experience)   $navItems[] = ['id' => 'experience',   'label' => __('app.nav.experience')];
+    if (isset($settings) && $settings->show_education)    $navItems[] = ['id' => 'education',    'label' => __('app.nav.education')];
+    if (isset($settings) && $settings->show_skills)       $navItems[] = ['id' => 'skills',       'label' => __('app.nav.skills')];
+    if (isset($settings) && $settings->show_portfolios)   $navItems[] = ['id' => 'portfolios',   'label' => __('app.nav.portfolio')];
+    if (isset($settings) && $settings->show_testimonials) $navItems[] = ['id' => 'testimonials', 'label' => __('app.nav.testimonials')];
+    if (isset($settings) && $settings->show_contact)      $navItems[] = ['id' => 'contact',      'label' => __('app.nav.contact')];
+
     $otherLocale = app()->getLocale() === 'fa' ? 'en' : 'fa';
 @endphp
 
