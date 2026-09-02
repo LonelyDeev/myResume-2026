@@ -3,7 +3,7 @@
 User-agent: *
 Allow: /
 
-# ربات‌های موتورهای پاسخ‌گوی AI (اختیاری ولی توصیه‌شده برای دیده‌شدن در چت‌بات‌ها)
+# ربات‌های موتورهای پاسخ‌گوی AI (برای دیده‌شدن در ChatGPT، Claude، Perplexity و ...)
 User-agent: GPTBot
 Allow: /
 
@@ -28,4 +28,4 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-Sitemap: https://weblak.com/sitemap.xml
+Sitemap: https://weblak.ir/sitemap.xml

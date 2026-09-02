@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    <url>
+        <loc>https://weblak.ir/fa</loc>
+        <xhtml:link rel="alternate" hreflang="fa" href="https://weblak.ir/fa"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weblak.ir/en"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weblak.ir/en"/>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <url>
+        <loc>https://weblak.ir/en</loc>
+        <xhtml:link rel="alternate" hreflang="fa" href="https://weblak.ir/fa"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://weblak.ir/en"/>
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://weblak.ir/en"/>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+</urlset>

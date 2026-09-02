@@ -15,6 +15,7 @@
 
     {{-- ═════════════ Canonical + Hreflang (چندزبانه) ═════════════ --}}
     @php
+        // آدرس فعلی بدون پارامترهای اضافه، برای هر دو زبان می‌سازیم
         $canonicalUrl = route('home', ['locale' => app()->getLocale()]);
         $urlFa        = route('home', ['locale' => 'fa']);
         $urlEn        = route('home', ['locale' => 'en']);
@@ -32,8 +33,15 @@
     <meta property="og:url" content="{{ $canonicalUrl }}">
     <meta property="og:locale" content="{{ app()->getLocale() === 'fa' ? 'fa_IR' : 'en_US' }}">
     <meta property="og:locale:alternate" content="{{ app()->getLocale() === 'fa' ? 'en_US' : 'fa_IR' }}">
-    @if (!empty($settings->og_image ?? $info->t('avatar') ?? null))
-        <meta property="og:image" content="{{ $settings->og_image ?? asset($info->t('avatar')) }}">
+    @php
+        // اولویت با تصویر اختصاصی og_image، در غیر این‌صورت آواتار پروفایل استفاده می‌شود
+        $shareImage = $settings->og_image ?? null;
+        if (empty($shareImage) && !empty($info->t('avatar'))) {
+            $shareImage = str_starts_with($info->t('avatar'), 'http') ? $info->t('avatar') : asset($info->t('avatar'));
+        }
+    @endphp
+    @if (!empty($shareImage))
+        <meta property="og:image" content="{{ $shareImage }}">
         <meta property="og:image:width" content="1200">
         <meta property="og:image:height" content="630">
         <meta property="og:image:alt" content="{{ $info->t('name') }} | {{ $info->t('job_title') }}">
@@ -43,36 +51,67 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $info->t('name') }} | {{ $info->t('job_title') }}">
     <meta name="twitter:description" content="{{ $settings->t('meta_description') }}">
-    @if (!empty($settings->og_image ?? $info->t('avatar') ?? null))
-        <meta name="twitter:image" content="{{ $settings->og_image ?? asset($info->t('avatar')) }}">
+    @if (!empty($shareImage))
+        <meta name="twitter:image" content="{{ $shareImage }}">
     @endif
 
     {{-- ═════════════ آیکون‌ها ═════════════ --}}
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%230b1220'/><text x='50' y='68' font-size='52' font-family='Arial' font-weight='bold' text-anchor='middle' fill='%232dd4bf'>M</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%230b1220'/><text x='50' y='68' font-size='52' font-family='Arial' font-weight='bold' text-anchor='middle' fill='%232dd4bf'>M</text></svg>">
 
+    {{--
+        ⚠️ نکته حیاتی: هرگز رشته‌ی "@context" را به‌صورت خام در فایل Blade ننویسید.
+        Blade پیش از اجرای PHP، یک اسکن متنی روی کل فایل انجام می‌دهد و "@context"
+        را با دایرکتیو داخلی Context لاراول (Illuminate Context) اشتباه می‌گیرد و
+        آن را با سورس PHP جایگزین می‌کند — همین باعث خراب‌شدن کامل JSON-LD در خروجی
+        سایت شما شده بود. راه‌حل: همیشه آن را به‌صورت "@@context" بنویسید تا Blade
+        فقط علامت @ را به‌صورت متن خام چاپ کند.
+    --}}
     {{-- ═════════════ Structured Data (JSON-LD) — کلید دیده‌شدن در جستجوی AI ═════════════ --}}
+    @php
+        $avatarUrl = !empty($info->t('avatar')) ? (str_starts_with($info->t('avatar'), 'http') ? $info->t('avatar') : asset($info->t('avatar'))) : null;
+
+        // sameAs فقط باید لینک به پروفایل/صفحات وب باشد، نه mailto: یا tel:
+        $sameAsLinks = collect($socials)
+            ->pluck('url')
+            ->filter(fn ($url) => str_starts_with($url, 'http'))
+            ->values()
+            ->all();
+
+        $personSchema = [
+            '@@context' => 'https://schema.org',
+            '@type' => 'Person',
+            'name' => $info->t('name'),
+            'jobTitle' => $info->t('job_title'),
+            'description' => $settings->t('meta_description'),
+            'url' => $canonicalUrl,
+            'sameAs' => $sameAsLinks,
+            'knowsAbout' => $info->jobTitles(),
+        ];
+        if ($avatarUrl) {
+            $personSchema['image'] = $avatarUrl;
+        }
+        if (!empty($info->t('email'))) {
+            $personSchema['email'] = $info->t('email');
+        }
+        if (!empty($info->t('phone'))) {
+            $personSchema['telephone'] = $info->t('phone');
+        }
+
+        $websiteSchema = [
+            '@@context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            'name' => $settings->t('site_title'),
+            'url' => $canonicalUrl,
+            'inLanguage' => app()->getLocale(),
+            'description' => $settings->t('meta_description'),
+        ];
+    @endphp
     <script type="application/ld+json">
-        {!! json_encode([
-            '@context'    => "https://schema.org",
-            '@type'       => "Person",
-            "name"        => $info->t('name'),
-            "jobTitle"    => $info->t('job_title'),
-            "description" => $settings->t('meta_description'),
-            "url"         => $canonicalUrl,
-            "sameAs"      => collect($socials)->pluck('url')->values()->all(),
-            "knowsAbout"  => $info->jobTitles(),
-        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}
+        {!! json_encode($personSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
     </script>
     <script type="application/ld+json">
-        {!! json_encode([
-            '@context'    => "https://schema.org",
-            '@type'       => "WebSite",
-            "name"        => $settings->t('site_title'),
-            "url"         => $canonicalUrl,
-            "inLanguage"  => app()->getLocale(),
-            "description" => $settings->t('meta_description'),
-        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}
+        {!! json_encode($websiteSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
     </script>
 
     {{-- ═════════════ Preconnect برای منابع خارجی (سرعت = سئو) ═════════════ --}}
@@ -207,16 +246,14 @@
 <body class="bg-navy-900 font-sans text-slate-300 antialiased">
 
 @php
-    $navItems = array_values(array_filter([
-        $settings->show_about        ? ['id' => 'about',        'label' => __('app.nav.about')]        : null,
-        $settings->show_experience   ? ['id' => 'experience',   'label' => __('app.nav.experience')]   : null,
-        $settings->show_education    ? ['id' => 'education',    'label' => __('app.nav.education')]    : null,
-        $settings->show_skills       ? ['id' => 'skills',       'label' => __('app.nav.skills')]       : null,
-        $settings->show_portfolios   ? ['id' => 'portfolios',   'label' => __('app.nav.portfolio')]    : null,
-        $settings->show_testimonials ? ['id' => 'testimonials', 'label' => __('app.nav.testimonials')] : null,
-        $settings->show_contact      ? ['id' => 'contact',      'label' => __('app.nav.contact')]      : null,
-    ]));
-
+    $navItems = [];
+    if ($settings->show_about)        $navItems[] = ['id' => 'about',        'label' => __('app.nav.about')];
+    if ($settings->show_experience)   $navItems[] = ['id' => 'experience',   'label' => __('app.nav.experience')];
+    if ($settings->show_education)    $navItems[] = ['id' => 'education',    'label' => __('app.nav.education')];
+    if ($settings->show_skills)       $navItems[] = ['id' => 'skills',       'label' => __('app.nav.skills')];
+    if ($settings->show_portfolios)   $navItems[] = ['id' => 'portfolios',   'label' => __('app.nav.portfolio')];
+    if ($settings->show_testimonials) $navItems[] = ['id' => 'testimonials', 'label' => __('app.nav.testimonials')];
+    if ($settings->show_contact)      $navItems[] = ['id' => 'contact',      'label' => __('app.nav.contact')];
     $otherLocale = app()->getLocale() === 'fa' ? 'en' : 'fa';
 @endphp
 
