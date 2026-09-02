@@ -121,50 +121,12 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
     <link rel="dns-prefetch" href="https://unpkg.com">
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        navy: { 950: '#070d1a', 900: '#0b1220', 800: '#111a2e', 700: '#182444' },
-                        brand: { 300: '#5eead4', 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488' },
-                        gold: { 400: '#fbbf24', 500: '#f59e0b' },
-                    },
-                    fontFamily: {
-                        sans: ["{{ app()->getLocale() === 'fa' ? 'Vazirmatn' : 'Inter' }}", "Vazirmatn", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
-                    },
-                    animation: {
-                        float: 'float 6s ease-in-out infinite',
-                        'float-slow': 'float 9s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-16px)' },
-                        },
-                    },
-                }
-            }
-        }
-    </script>
-
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ filemtime(public_path('css/app.css')) }}">
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
-    <style type="text/tailwindcss">
-        .glass    { @apply bg-white/[0.04] border border-white/10 backdrop-blur-xl; }
-        .chip     { @apply inline-flex items-center gap-2 rounded-full border border-brand-400/30 bg-brand-400/10 px-4 py-1.5 text-xs font-bold text-brand-300; }
-        .f-btn    { @apply inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-bold transition select-none; }
-        .f-btn-primary { @apply f-btn bg-gradient-to-l from-brand-500 to-sky-500 text-navy-950 shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 hover:-translate-y-0.5; }
-        .f-btn-ghost   { @apply f-btn border border-white/15 bg-white/5 text-white hover:border-brand-400/50 hover:bg-white/10 hover:-translate-y-0.5; }
-        .f-input  { @apply w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-3.5 text-sm text-white placeholder-slate-500 outline-none transition focus:border-brand-400/60 focus:bg-white/[0.07] focus:ring-4 focus:ring-brand-400/10; }
-        .sec-title { @apply text-3xl font-black text-white md:text-4xl; }
-        .tech-tag { @apply inline-flex items-center rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-bold text-slate-300; }
-    </style>
 
     <style>
         html { scroll-behavior: smooth; scroll-padding-top: 96px; }
