@@ -15,7 +15,6 @@
 
     {{-- ═════════════ Canonical + Hreflang (چندزبانه) ═════════════ --}}
     @php
-        // آدرس فعلی بدون پارامترهای اضافه، برای هر دو زبان می‌سازیم
         $canonicalUrl = route('home', ['locale' => app()->getLocale()]);
         $urlFa        = route('home', ['locale' => 'fa']);
         $urlEn        = route('home', ['locale' => 'en']);
@@ -55,25 +54,25 @@
     {{-- ═════════════ Structured Data (JSON-LD) — کلید دیده‌شدن در جستجوی AI ═════════════ --}}
     <script type="application/ld+json">
         {!! json_encode([
-            "@context" => "https://schema.org",
-            "@type" => "Person",
-            "name" => $info->t('name'),
-            "jobTitle" => $info->t('job_title'),
+            '@context'    => "https://schema.org",
+            '@type'       => "Person",
+            "name"        => $info->t('name'),
+            "jobTitle"    => $info->t('job_title'),
             "description" => $settings->t('meta_description'),
-            "url" => $canonicalUrl,
-            "sameAs" => collect($socials)->pluck('url')->values()->all(),
-            "knowsAbout" => $info->jobTitles(),
-        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+            "url"         => $canonicalUrl,
+            "sameAs"      => collect($socials)->pluck('url')->values()->all(),
+            "knowsAbout"  => $info->jobTitles(),
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}
     </script>
     <script type="application/ld+json">
         {!! json_encode([
-            "@context" => "https://schema.org",
-            "@type" => "WebSite",
-            "name" => $settings->t('site_title'),
-            "url" => $canonicalUrl,
-            "inLanguage" => app()->getLocale(),
+            '@context'    => "https://schema.org",
+            '@type'       => "WebSite",
+            "name"        => $settings->t('site_title'),
+            "url"         => $canonicalUrl,
+            "inLanguage"  => app()->getLocale(),
             "description" => $settings->t('meta_description'),
-        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}
     </script>
 
     {{-- ═════════════ Preconnect برای منابع خارجی (سرعت = سئو) ═════════════ --}}
@@ -208,14 +207,15 @@
 <body class="bg-navy-900 font-sans text-slate-300 antialiased">
 
 @php
-    $navItems = [];
-    if (isset($settings) && $settings->show_about)        $navItems[] = ['id' => 'about',        'label' => __('app.nav.about')];
-    if (isset($settings) && $settings->show_experience)   $navItems[] = ['id' => 'experience',   'label' => __('app.nav.experience')];
-    if (isset($settings) && $settings->show_education)    $navItems[] = ['id' => 'education',    'label' => __('app.nav.education')];
-    if (isset($settings) && $settings->show_skills)       $navItems[] = ['id' => 'skills',       'label' => __('app.nav.skills')];
-    if (isset($settings) && $settings->show_portfolios)   $navItems[] = ['id' => 'portfolios',   'label' => __('app.nav.portfolio')];
-    if (isset($settings) && $settings->show_testimonials) $navItems[] = ['id' => 'testimonials', 'label' => __('app.nav.testimonials')];
-    if (isset($settings) && $settings->show_contact)      $navItems[] = ['id' => 'contact',      'label' => __('app.nav.contact')];
+    $navItems = array_values(array_filter([
+        $settings->show_about        ? ['id' => 'about',        'label' => __('app.nav.about')]        : null,
+        $settings->show_experience   ? ['id' => 'experience',   'label' => __('app.nav.experience')]   : null,
+        $settings->show_education    ? ['id' => 'education',    'label' => __('app.nav.education')]    : null,
+        $settings->show_skills       ? ['id' => 'skills',       'label' => __('app.nav.skills')]       : null,
+        $settings->show_portfolios   ? ['id' => 'portfolios',   'label' => __('app.nav.portfolio')]    : null,
+        $settings->show_testimonials ? ['id' => 'testimonials', 'label' => __('app.nav.testimonials')] : null,
+        $settings->show_contact      ? ['id' => 'contact',      'label' => __('app.nav.contact')]      : null,
+    ]));
 
     $otherLocale = app()->getLocale() === 'fa' ? 'en' : 'fa';
 @endphp
