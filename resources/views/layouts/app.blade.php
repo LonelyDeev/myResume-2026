@@ -5,13 +5,225 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    {{-- ═══════════════════ Basic SEO ═══════════════════ --}}
     <title>{{ $settings->t('site_title') }}</title>
     <meta name="description" content="{{ $settings->t('meta_description') }}">
-    <meta property="og:title" content="{{ $info->t('name') }} | {{ $info->t('job_title') }}">
-    <meta property="og:description" content="{{ $settings->t('meta_description') }}">
+    <meta name="author" content="{{ $info->t('name') }}">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="theme-color" content="#0b1220">
+    <meta name="color-scheme" content="dark">
 
+    {{-- ═══════════════════ Canonical & Hreflang ═══════════════════ --}}
+    <link rel="canonical" href="{{ url()->current() }}">
+    <link rel="alternate" hreflang="fa" href="{{ route('home', ['locale' => 'fa']) }}">
+    <link rel="alternate" hreflang="en" href="{{ route('home', ['locale' => 'en']) }}">
+    <link rel="alternate" hreflang="x-default" href="{{ route('home', ['locale' => 'fa']) }}">
+
+    {{-- ═══════════════════ Performance: Preconnect & DNS Prefetch ═══════════════════ --}}
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://unpkg.com" crossorigin>
+    <link rel="dns-prefetch" href="//weblak.ir">
+
+    {{-- ═══════════════════ Preload Critical Fonts ═══════════════════ --}}
+    @if(app()->getLocale() === 'fa')
+        <link rel="preload" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css"></noscript>
+    @else
+        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"></noscript>
+    @endif
+
+    {{-- ═══════════════════ Favicon ═══════════════════ --}}
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%230b1220'/><text x='50' y='68' font-size='52' font-family='Arial' font-weight='bold' text-anchor='middle' fill='%232dd4bf'>M</text></svg>">
 
+    {{-- ═══════════════════ Open Graph (Profile) ═══════════════════ --}}
+    @php
+        $avatarUrl = $info->avatar ?? 'https://weblak.ir/avatar/3HwPWEh2xKCo3pVycZCIqa8uRBLQ5iyYIyQEMTMW.jpg';
+        $nameParts = explode(' ', $info->t('name'), 2);
+        $firstName = $nameParts[0] ?? $info->t('name');
+        $lastName = $nameParts[1] ?? '';
+        $currentUrl = route('home', ['locale' => app()->getLocale()]);
+    @endphp
+
+    <meta property="og:type" content="profile">
+    <meta property="og:title" content="{{ $info->t('name') }} | {{ $info->t('job_title') }}">
+    <meta property="og:description" content="{{ $settings->t('meta_description') }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:site_name" content="{{ $settings->t('site_title') }}">
+    <meta property="og:locale" content="{{ app()->getLocale() === 'fa' ? 'fa_IR' : 'en_US' }}">
+    <meta property="og:image" content="{{ $avatarUrl }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="{{ $info->t('name') }} - {{ $info->t('job_title') }}">
+    <meta property="profile:first_name" content="{{ $firstName }}">
+    <meta property="profile:last_name" content="{{ $lastName }}">
+
+    {{-- ═══════════════════ Twitter Card ═══════════════════ --}}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $info->t('name') }} | {{ $info->t('job_title') }}">
+    <meta name="twitter:description" content="{{ $settings->t('meta_description') }}">
+    <meta name="twitter:image" content="{{ $avatarUrl }}">
+    <meta name="twitter:image:alt" content="{{ $info->t('name') }} - {{ $info->t('job_title') }}">
+
+    {{-- ═══════════════════ Structured Data: Person + WebSite + ProfessionalService + Breadcrumb ═══════════════════ --}}
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Person",
+              "@id": "{{ $currentUrl }}#person",
+          "name": "{{ $info->t('name') }}",
+          "jobTitle": "{{ $info->t('job_title') }}",
+          "description": "{{ $settings->t('meta_description') }}",
+          "url": "{{ $currentUrl }}",
+          "image": {
+            "@type": "ImageObject",
+            "url": "{{ $avatarUrl }}",
+            "width": 800,
+            "height": 800,
+            "caption": "{{ $info->t('name') }}"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "{{ $info->city ?? 'قزوین' }}",
+            "addressRegion": "{{ $info->region ?? 'تهران' }}",
+            "addressCountry": "IR"
+          },
+          "email": "{{ $info->email ?? 'info@weblak.ir' }}",
+          "telephone": "{{ $info->phone ?? '+989190478451' }}",
+          "knowsAbout": ["Laravel", "PHP", "MySQL", "Redis", "REST API", "Docker", "WordPress", "OpenAI API", "Backend Development", "Web Security", "Payment Gateway Integration", "Prompt Engineering"],
+          "sameAs": [
+        @foreach($socials as $social)
+            "{{ $social->url }}"@if(!$loop->last),@endif
+        @endforeach
+        ],
+        "worksFor": {
+          "@type": "Organization",
+          "name": "{{ $settings->t('site_title') }}",
+            "url": "{{ $currentUrl }}"
+          },
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "{{ $currentUrl }}"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "{{ $currentUrl }}#website",
+          "url": "{{ $currentUrl }}",
+          "name": "{{ $settings->t('site_title') }}",
+          "description": "{{ $settings->t('meta_description') }}",
+          "publisher": {
+            "@id": "{{ $currentUrl }}#person"
+          },
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "{{ $currentUrl }}?search={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          },
+          "inLanguage": "{{ app()->getLocale() === 'fa' ? 'fa-IR' : 'en-US' }}"
+        },
+        {
+          "@type": "ProfessionalService",
+          "@id": "{{ $currentUrl }}#service",
+          "name": "{{ $info->t('job_title') }}",
+          "provider": {
+            "@id": "{{ $currentUrl }}#person"
+          },
+          "areaServed": {
+            "@type": "Country",
+            "name": "Iran"
+          },
+          "serviceType": ["Web Development", "Laravel Development", "Backend Development", "API Development", "E-commerce Development", "AI Integration", "WordPress Plugin Development"],
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Development Services",
+            "itemListElement": [
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Laravel Development",
+                  "description": "Building scalable web applications with Laravel framework including multi-vendor marketplaces"
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "REST API Development",
+                  "description": "Designing and implementing secure RESTful APIs with Sanctum authentication and OAuth2"
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "E-commerce Solutions",
+                  "description": "Multi-vendor marketplace and online store development with Iranian payment gateway integration"
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "AI Integration",
+                  "description": "OpenAI API integration and prompt engineering for intelligent chatbots and content generation"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "{{ app()->getLocale() === 'fa' ? 'خانه' : 'Home' }}",
+              "item": "{{ $currentUrl }}"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    {{-- ═══════════════════ Speakable for AI Assistants (Google SGE, Bing Copilot) ═══════════════════ --}}
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "{{ url()->current() }}#webpage",
+      "url": "{{ url()->current() }}",
+      "name": "{{ $settings->t('site_title') }}",
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": ["#hero h1", "#hero h2", "#about .sec-title", "#about p", "#skills .sec-title"]
+      },
+      "mainEntity": {
+        "@id": "{{ $currentUrl }}#person"
+      },
+      "about": {
+        "@id": "{{ $currentUrl }}#person"
+      },
+      "isPartOf": {
+        "@id": "{{ $currentUrl }}#website"
+      }
+    }
+    </script>
+
+    {{-- ═══════════════════ Stack for Child Page Schemas (FAQ, Article, Review, etc.) ═══════════════════ --}}
+    @stack('schemas')
+
+    {{-- ═══════════════════ Tailwind Config ═══════════════════ --}}
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -40,7 +252,10 @@
         }
     </script>
 
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+    {{-- ═══════════════════ Stylesheets ═══════════════════ --}}
+    @if(app()->getLocale() === 'fa')
+        <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+    @endif
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
@@ -59,7 +274,6 @@
     <style>
         html { scroll-behavior: smooth; scroll-padding-top: 96px; }
 
-        /* الگوی گرید پس‌زمینه */
         .bg-grid {
             background-image:
                 linear-gradient(rgba(148, 163, 184, 0.06) 1px, transparent 1px),
@@ -69,7 +283,6 @@
             -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 40%, transparent 100%);
         }
 
-        /* منوی اسکرول فعال */
         .nav-link.active { color: #5eead4; }
         .nav-link.active::after { transform: scaleX(1); }
         .nav-link::after {
@@ -86,7 +299,6 @@
             transition: transform .3s ease;
         }
 
-        /* کرسر افکت تایپ */
         .typing-cursor {
             display: inline-block;
             width: 3px;
@@ -100,19 +312,16 @@
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* مودال نمونه‌کار: انیمیشن ورود */
         @keyframes pm-pop {
             from { opacity: 0; transform: scale(.95) translateY(16px); }
             to   { opacity: 1; transform: scale(1) translateY(0); }
         }
         #portfolio-modal .pm-shell { animation: pm-pop .38s cubic-bezier(.16, 1, .3, 1) both; }
 
-        /* لایت‌باکس تمام‌صفحه */
         @keyframes pm-fade { from { opacity: 0; } to { opacity: 1; } }
         #portfolio-lightbox { animation: pm-fade .25s ease both; }
         #portfolio-lightbox img { animation: pm-pop .3s cubic-bezier(.16, 1, .3, 1) both; }
 
-        /* اسکرول‌بار باریک بندانگشتی‌ها و جزئیات مودال */
         .pm-thumbs::-webkit-scrollbar { height: 6px; }
         .pm-thumbs::-webkit-scrollbar-track { background: transparent; }
         .pm-thumbs::-webkit-scrollbar-thumb { background: #182444; border-radius: 8px; }
@@ -121,16 +330,13 @@
         .pm-details::-webkit-scrollbar-track { background: transparent; }
         .pm-details::-webkit-scrollbar-thumb { background: #182444; border-radius: 8px; }
 
-        /* اسکرول‌بار */
         ::-webkit-scrollbar { width: 9px; }
         ::-webkit-scrollbar-track { background: #0b1220; }
         ::-webkit-scrollbar-thumb { background: #182444; border-radius: 8px; }
         ::-webkit-scrollbar-thumb:hover { background: #2dd4bf; }
 
         ::selection { background: rgba(45, 212, 191, 0.3); color: #fff; }
-        .dir-ltr{
-            direction: ltr;
-        }
+        .dir-ltr { direction: ltr; }
     </style>
 </head>
 <body class="bg-navy-900 font-sans text-slate-300 antialiased">
@@ -148,10 +354,11 @@
 @endphp
 
 {{-- ═════════════════════════ ناوبری ═════════════════════════ --}}
-<header id="main-nav" class=" inset-x-0 top-0 z-50 transition-all duration-300">
-    <nav class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 lg:px-8">
+<header id="main-nav" class="inset-x-0 top-0 z-50 transition-all duration-300">
+    <nav class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 lg:px-8" aria-label="Main Navigation">
         <a href="{{ route('home', ['locale' => app()->getLocale()]) }}"
-           class="flex h-11  items-center justify-center rounded-2xl from-brand-400 to-sky-500 text-base font-black text-navy-950 shadow-lg transition hover:scale-105 dir-ltr">
+           class="flex h-11 items-center justify-center rounded-2xl from-brand-400 to-sky-500 text-base font-black text-navy-950 shadow-lg transition hover:scale-105 dir-ltr"
+           aria-label="{{ $settings->t('site_title') }} — {{ __('app.nav.home') }}">
             <svg width="180" height="44" viewBox="0 0 180 44" xmlns="http://www.w3.org/2000/svg" style="margin-right: -70px">
                 <defs>
                     <linearGradient id="sealGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -176,7 +383,7 @@
             </svg>
         </a>
 
-        {{-- لینک‌ها --}}
+        {{-- لینک‌های دسکتاپ --}}
         <ul class="hidden items-center gap-7 lg:flex">
             @foreach ($navItems as $item)
                 <li>
@@ -192,20 +399,21 @@
             {{-- سوییچ زبان --}}
             <a href="{{ route('lang.switch', $otherLocale) }}"
                class="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3.5 py-2 text-xs font-black text-slate-300 transition hover:border-brand-400/40 hover:text-brand-300"
-               title="{{ __('app.nav.switch_lang') }}">
+               title="{{ __('app.nav.switch_lang') }}"
+               hreflang="{{ $otherLocale }}">
                 <i class="fa-solid fa-globe text-brand-400"></i>
                 {{ $otherLocale === 'fa' ? 'فارسی' : 'English' }}
             </a>
 
             {{-- همبرگر موبایل --}}
-            <button id="nav-burger" class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white lg:hidden">
+            <button id="nav-burger" class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white lg:hidden" aria-label="{{ __('app.nav.menu') }}" aria-expanded="false">
                 <i class="fa-solid fa-bars"></i>
             </button>
         </div>
     </nav>
 
     {{-- منوی موبایل --}}
-    <div id="nav-mobile" class="hidden border-t border-white/10 bg-navy-950/95 backdrop-blur-xl lg:hidden">
+    <div id="nav-mobile" class="hidden border-t border-white/10 bg-navy-950/95 backdrop-blur-xl lg:hidden" aria-label="Mobile Navigation">
         <ul class="mx-auto max-w-6xl space-y-1 px-5 py-4">
             @foreach ($navItems as $item)
                 <li>
@@ -221,11 +429,10 @@
 
 {{-- ═════════════════════════ محتوا ═════════════════════════ --}}
 <main>
-    {{-- توست پیام موفقیت فرم تماس --}}
     @if (session('contact_success'))
         <div id="flash-toast"
              class="fixed top-24 start-1/2 z-[70] flex -translate-x-1/2 items-center gap-3 rounded-2xl border border-brand-400/30 bg-navy-800/95 px-6 py-4 text-sm font-bold text-white shadow-2xl shadow-brand-500/20 backdrop-blur transition-all duration-400"
-             dir="auto">
+             dir="auto" role="status" aria-live="polite">
             <span class="flex h-9 w-9 items-center justify-center rounded-full bg-brand-400/15 text-brand-300">
                 <i class="fa-solid fa-check"></i>
             </span>
@@ -240,8 +447,8 @@
 <footer class="border-t border-white/10 bg-navy-950/60 py-10">
     <div class="mx-auto flex max-w-6xl flex-col items-center gap-5 px-5 lg:px-8">
         <a href="{{ route('home', ['locale' => app()->getLocale()]) }}"
-           class="flex h-12 items-center justify-center rounded-2xl from-brand-400 to-sky-500 text-lg font-black text-navy-950 dir-ltr">
-            {{--{{ mb_substr($info->t('name_en') ?: $info->t('name'), 0, 1) }}--}}
+           class="flex h-12 items-center justify-center rounded-2xl from-brand-400 to-sky-500 text-lg font-black text-navy-950 dir-ltr"
+           aria-label="{{ $settings->t('site_title') }}">
             <svg width="180" height="44" viewBox="0 0 180 44" xmlns="http://www.w3.org/2000/svg" style="margin-right: -53px">
                 <defs>
                     <linearGradient id="sealGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -269,7 +476,8 @@
         <div class="flex items-center gap-2">
             @foreach ($socials as $social)
                 <a href="{{ $social->url }}" target="_blank" rel="noopener" title="{{ $social->platform }}"
-                   class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-400 transition hover:border-brand-400/50 hover:text-brand-300">
+                   class="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-400 transition hover:border-brand-400/50 hover:text-brand-300"
+                   aria-label="{{ $social->platform }}">
                     <i class="{{ $social->icon }}"></i>
                 </a>
             @endforeach
@@ -284,9 +492,10 @@
 {{-- دکمه بازگشت به بالا --}}
 <button id="back-to-top"
         class="fixed bottom-6 end-6 z-40 flex h-11 w-11 translate-y-20 items-center justify-center rounded-xl bg-brand-500 text-navy-950 opacity-0 shadow-lg shadow-brand-500/40 transition-all hover:bg-brand-400"
-        aria-label="بازگشت به بالا">
+        aria-label="{{ __('app.nav.back_to_top') }}">
     <i class="fa-solid fa-arrow-up"></i>
 </button>
+
 
 {{-- ═════════════════════════ اسکریپت‌ها ═════════════════════════ --}}
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
