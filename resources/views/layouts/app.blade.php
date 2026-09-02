@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $settings->t('site_title') }} — {{ $info->t('name') }}</title>
+    <title>{{ $settings->t('site_title') }}</title>
     <meta name="description" content="{{ $settings->t('meta_description') }}">
     <meta property="og:title" content="{{ $info->t('name') }} | {{ $info->t('job_title') }}">
     <meta property="og:description" content="{{ $settings->t('meta_description') }}">
