@@ -1,2 +1,31 @@
+# robots.txt — اجازه‌ی کامل ایندکس برای همه‌ی ربات‌ها + ربات‌های AI
+
 User-agent: *
-Disallow:
+Allow: /
+
+# ربات‌های موتورهای پاسخ‌گوی AI (اختیاری ولی توصیه‌شده برای دیده‌شدن در چت‌بات‌ها)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+Sitemap: https://YOUR-DOMAIN.com/sitemap.xml
